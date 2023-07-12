@@ -336,6 +336,5 @@ bi_resp_4 <- ggplot(trans_drv_res_4) +
         axis.line.y = element_line(colour = "black"),
         legend.position = "top") 
 
-
 grid.arrange(bi_ex_1,bi_ex_2,bi_ex_3,bi_ex_6,bi_ex_5,bi_ex_4, ncol=3, nrow=2)
 grid.arrange(bi_resp_1,bi_resp_2,bi_resp_3,bi_resp_4, ncol=2, nrow=2)
