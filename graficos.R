@@ -1,4 +1,4 @@
-pacman::p_load(readxl, tidyverse, dplyr, GGally, ggview)
+pacman::p_load(readxl, tidyverse, dplyr,gridExtra, ggview)
 dados <- read_excel("dados_trabalho.xlsx")
 cores <- c("#283D3B","#197278","#E1C7B7","#C44536","#772E25")
 
@@ -42,7 +42,7 @@ valid <- anti_join(dados, amostra)
 # Descritiva Univariada ----
 
 # Idade
-ggplot(amostra, aes(x="", y=idade)) +
+uni_1 <- ggplot(amostra, aes(x="", y=idade)) +
   geom_boxplot(fill=cores[2], width = 0.5) +
   stat_summary(fun.y="mean", geom="point", shape=23, size=3, fill="white")+
   labs(x="", y="Idade") +
@@ -61,7 +61,7 @@ classes <- amostra %>%
   mutate(freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
          label = str_c(n, " (", freq, ")") %>% str_squish())
 
-ggplot(classes,  aes(x = as.factor(status), y = n, label = n))  +
+uni_2 <- ggplot(classes,  aes(x = as.factor(status), y = n, label = n))  +
   geom_bar(stat = "identity", fill = cores[2], width = 0.7) +
   geom_text(position = position_dodge(width = .9),
             vjust = -0.5, # hjust = .5,
@@ -82,7 +82,7 @@ classes <- amostra %>%
   mutate(freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
          label = str_c(n, " (", freq, ")") %>% str_squish())
 
-ggplot(classes,  aes(x = as.factor(casa), y = n, label = n))  +
+uni_3 <- ggplot(classes,  aes(x = as.factor(casa), y = n, label = n))  +
   geom_bar(stat = "identity", fill = cores[2], width = 0.7) +
   geom_text(position = position_dodge(width = .9),
             vjust = -0.5, # hjust = .5,
@@ -102,7 +102,7 @@ classes <- amostra %>%
   mutate(freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
          label = str_c(n, " (", freq, ")") %>% str_squish())
 
-ggplot(classes,  aes(x = as.factor(setor), y = n, label = n))  +
+uni_4 <- ggplot(classes,  aes(x = as.factor(setor), y = n, label = n))  +
   geom_bar(stat = "identity", fill = cores[2], width = 0.7) +
   geom_text(position = position_dodge(width = .9),
             vjust = -0.5, # hjust = .5,
@@ -123,7 +123,7 @@ classes <- amostra %>%
   mutate(freq = gsub("\\.", ",", freq) %>% paste("%", sep = ""),
          label = str_c(n, " (", freq, ")") %>% str_squish())
 
-ggplot(classes,  aes(x = as.factor(poupanca), y = n, label = n))  +
+uni_5 <- ggplot(classes,  aes(x = as.factor(poupanca), y = n, label = n))  +
   geom_bar(stat = "identity", fill = cores[2], width = 0.7) +
   geom_text(position = position_dodge(width = .9),
             vjust = -0.5, # hjust = .5,
@@ -136,9 +136,12 @@ ggplot(classes,  aes(x = as.factor(poupanca), y = n, label = n))  +
         panel.border = element_blank(),
         axis.line.y = element_line(colour = "black"))
 
+grid.arrange(uni_1,uni_2,uni_3,uni_4,uni_5, ncol=3, nrow=2, layout_matrix = rbind(c(2,1,3),
+                                                                                  c(4,1,5)))
+
 # Descritiva Bivariada ----
 # Idade - Status
-ggplot(amostra) +
+bi_ex_1 <- ggplot(amostra) +
   aes(x = status, y = idade) +
   geom_boxplot(fill = cores[2], width = 0.5) +
   stat_summary(fun = "mean", geom = "point", shape = 23, size = 3, fill = "white") +
@@ -151,7 +154,7 @@ ggplot(amostra) +
         axis.line.y = element_line(colour = "black")) 
 
 # Idade - Casa 
-ggplot(amostra) +
+bi_ex_2 <- ggplot(amostra) +
   aes(x = casa, y = idade) +
   geom_boxplot(fill = cores[2], width = 0.5) +
   stat_summary(fun = "mean", geom = "point", shape = 23, size = 3, fill = "white") +
@@ -164,7 +167,7 @@ ggplot(amostra) +
         axis.line.y = element_line(colour = "black")) 
 
 # Idade - Setor
-ggplot(amostra) +
+bi_ex_3 <- ggplot(amostra) +
   aes(x = setor, y = idade) +
   geom_boxplot(fill = cores[2], width = 0.5) +
   stat_summary(fun = "mean", geom = "point", shape = 23, size = 3, fill = "white") +
@@ -177,7 +180,7 @@ ggplot(amostra) +
         axis.line.y = element_line(colour = "black")) 
 
 # Idade - Poupança 
-ggplot(amostra) +
+bi_resp_1 <- ggplot(amostra) +
   aes(x = poupanca, y = idade) +
   geom_boxplot(fill = cores[2], width = 0.5) +
   stat_summary(fun = "mean", geom = "point", shape = 23, size = 3, fill = "white") +
@@ -190,16 +193,16 @@ ggplot(amostra) +
         axis.line.y = element_line(colour = "black")) 
 
 # Status - Casa 
-trans_drv <- amostra %>%
+trans_drv_4 <- amostra %>%
   group_by(casa, status) %>%
   summarise(freq = n()) %>%
   mutate(freq_relativa = freq %>% percent())
 
-porcentagens <- str_c(trans_drv$freq_relativa, "%") %>% str_replace("\\.", ",")
-legendas <- str_squish(str_c(trans_drv$freq, " (", porcentagens, ")"))
+porcentagens_4 <- str_c(trans_drv_4$freq_relativa, "%") %>% str_replace("\\.", ",")
+legendas_4 <- str_squish(str_c(trans_drv_4$freq, " (", porcentagens_4, ")"))
 
-ggplot(trans_drv) +
-  aes(x = fct_reorder(casa, freq, .desc = T),y = freq,fill = status,label = legendas) +
+bi_ex_4 <- ggplot(trans_drv_4) +
+  aes(x = fct_reorder(casa, freq, .desc = T),y = freq,fill = status,label = legendas_4) +
   geom_col(position = position_dodge2(preserve = "single", padding = 0)) +
   geom_text(position = position_dodge(width = .9),
            vjust = -0.5, hjust = 0.5,size = 3) +
@@ -214,16 +217,16 @@ ggplot(trans_drv) +
         legend.position = "top") 
 
 # Status - Setor 
-trans_drv <- amostra %>%
+trans_drv_5 <- amostra %>%
   group_by(setor, status) %>%
   summarise(freq = n()) %>%
   mutate(freq_relativa = freq %>% percent())
 
-porcentagens <- str_c(trans_drv$freq_relativa, "%") %>% str_replace("\\.", ",")
-legendas <- str_squish(str_c(trans_drv$freq, " (", porcentagens, ")"))
+porcentagens_5 <- str_c(trans_drv_5$freq_relativa, "%") %>% str_replace("\\.", ",")
+legendas_5 <- str_squish(str_c(trans_drv_5$freq, " (", porcentagens_5, ")"))
 
-ggplot(trans_drv) +
-  aes(x = setor,y = freq,fill = status,label = legendas) +
+bi_ex_5 <- ggplot(trans_drv_5) +
+  aes(x = setor,y = freq,fill = status,label = legendas_5) +
   geom_col(position = position_dodge2(preserve = "single", padding = 0)) +
   geom_text(position = position_dodge(width = .9),
             vjust = -0.5, hjust = 0.5,size = 3) +
@@ -238,16 +241,16 @@ ggplot(trans_drv) +
         legend.position = "top") 
 
 # Status - Poupança 
-trans_drv <- amostra %>%
+trans_drv_res_2 <- amostra %>%
   group_by(status,poupanca) %>%
   summarise(freq = n()) %>%
   mutate(freq_relativa = freq %>% percent())
 
-porcentagens <- str_c(trans_drv$freq_relativa, "%") %>% str_replace("\\.", ",")
-legendas <- str_squish(str_c(trans_drv$freq, " (", porcentagens, ")"))
+porcentagens_res_2 <- str_c(trans_drv_res_2$freq_relativa, "%") %>% str_replace("\\.", ",")
+legendas_res_2 <- str_squish(str_c(trans_drv_res_2$freq, " (", porcentagens_res_2, ")"))
 
-ggplot(trans_drv) +
-  aes(x = status,y = freq,fill = poupanca,label = legendas) +
+bi_resp_2 <- ggplot(trans_drv_res_2) +
+  aes(x = status,y = freq,fill = poupanca,label = legendas_res_2) +
   geom_col(position = position_dodge2(preserve = "single", padding = 0)) +
   geom_text(position = position_dodge(width = .9),
             vjust = -0.5, hjust = 0.5,size = 3) +
@@ -262,16 +265,16 @@ ggplot(trans_drv) +
         legend.position = "top") 
 
 # Casa - Setor
-trans_drv <- amostra %>%
+trans_drv_6 <- amostra %>%
   group_by(setor,casa) %>%
   summarise(freq = n()) %>%
   mutate(freq_relativa = freq %>% percent())
 
-porcentagens <- str_c(trans_drv$freq_relativa, "%") %>% str_replace("\\.", ",")
-legendas <- str_squish(str_c(trans_drv$freq, " (", porcentagens, ")"))
+porcentagens_6 <- str_c(trans_drv_6$freq_relativa, "%") %>% str_replace("\\.", ",")
+legendas_6 <- str_squish(str_c(trans_drv_6$freq, " (", porcentagens_6, ")"))
 
-ggplot(trans_drv) +
-  aes(x = setor,y = freq,fill = casa,label = legendas) +
+bi_ex_6 <- ggplot(trans_drv_6) +
+  aes(x = setor,y = freq,fill = casa,label = legendas_6) +
   geom_col(position = position_dodge2(preserve = "single", padding = 0)) +
   geom_text(position = position_dodge(width = .9),
             vjust = -0.5, hjust = 0.5,size = 3) +
@@ -286,16 +289,16 @@ ggplot(trans_drv) +
         legend.position = "top") 
 
 # Casa - Poupança 
-trans_drv <- amostra %>%
+trans_drv_res_3 <- amostra %>%
   group_by(casa,poupanca) %>%
   summarise(freq = n()) %>%
   mutate(freq_relativa = freq %>% percent())
 
-porcentagens <- str_c(trans_drv$freq_relativa, "%") %>% str_replace("\\.", ",")
-legendas <- str_squish(str_c(trans_drv$freq, " (", porcentagens, ")"))
+porcentagens_res_3 <- str_c(trans_drv_res_3$freq_relativa, "%") %>% str_replace("\\.", ",")
+legendas_res_3 <- str_squish(str_c(trans_drv_res_3$freq, " (", porcentagens_res_3, ")"))
 
-ggplot(trans_drv) +
-  aes(x = casa,y = freq,fill = poupanca,label = legendas) +
+bi_resp_3 <- ggplot(trans_drv_res_3) +
+  aes(x = casa,y = freq,fill = poupanca,label = legendas_res_3) +
   geom_col(position = position_dodge2(preserve = "single", padding = 0)) +
   geom_text(position = position_dodge(width = .9),
             vjust = -0.5, hjust = 0.5,size = 3) +
@@ -310,16 +313,16 @@ ggplot(trans_drv) +
         legend.position = "top") 
 
 # Setor - Poupança 
-trans_drv <- amostra %>%
+trans_drv_res_4 <- amostra %>%
   group_by(setor,poupanca) %>%
   summarise(freq = n()) %>%
   mutate(freq_relativa = freq %>% percent())
 
-porcentagens <- str_c(trans_drv$freq_relativa, "%") %>% str_replace("\\.", ",")
-legendas <- str_squish(str_c(trans_drv$freq, " (", porcentagens, ")"))
+porcentagens_res_4 <- str_c(trans_drv_res_4$freq_relativa, "%") %>% str_replace("\\.", ",")
+legendas_res_4 <- str_squish(str_c(trans_drv_res_4$freq, " (", porcentagens_res_4, ")"))
 
-ggplot(trans_drv) +
-  aes(x = setor,y = freq,fill = poupanca,label = legendas) +
+bi_resp_4 <- ggplot(trans_drv_res_4) +
+  aes(x = setor,y = freq,fill = poupanca,label = legendas_res_4) +
   geom_col(position = position_dodge2(preserve = "single", padding = 0)) +
   geom_text(position = position_dodge(width = .9),
             vjust = -0.5, hjust = 0.5,size = 3) +
@@ -332,3 +335,7 @@ ggplot(trans_drv) +
         panel.border = element_blank(),
         axis.line.y = element_line(colour = "black"),
         legend.position = "top") 
+
+
+grid.arrange(bi_ex_1,bi_ex_2,bi_ex_3,bi_ex_6,bi_ex_5,bi_ex_4, ncol=3, nrow=2)
+grid.arrange(bi_resp_1,bi_resp_2,bi_resp_3,bi_resp_4, ncol=2, nrow=2)
