@@ -323,7 +323,7 @@ ggplot(trans_drv) +
   geom_col(position = position_dodge2(preserve = "single", padding = 0)) +
   geom_text(position = position_dodge(width = .9),
             vjust = -0.5, hjust = 0.5,size = 3) +
-  labs(x = "Posse de casa própria", y = "Frequência") +
+  labs(x = "Setor da cidade", y = "Frequência") +
   scale_fill_manual(name="Conta Poupança", values=c("#197278","#C44536"))+
   theme_bw() +
   theme(axis.title.y=element_text(colour="black", size=12),
