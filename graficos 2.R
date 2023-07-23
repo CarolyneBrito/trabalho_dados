@@ -141,8 +141,10 @@ uni_5 <- ggplot(classes,  aes(x = as.factor(poupanca), y = n, label = n))  +
         panel.border = element_blank(),
         axis.line.y = element_line(colour = "black"))
 
-grid.arrange(uni_1,uni_2,uni_3,uni_4,uni_5, ncol=3, nrow=2, layout_matrix = rbind(c(2,1,3),
-                                                                                  c(4,1,5)))
+grid.arrange(uni_1,uni_2,uni_3,uni_4,uni_5, ncol=3, nrow=2, layout_matrix = rbind(c(2,1,3),c(4,1,5)))
+g <- arrangeGrob(uni_1,uni_2,uni_3,uni_4,uni_5, ncol=3, nrow=2, layout_matrix = rbind(c(2,1,3),c(4,1,5))) #generates g
+ggview(g, width = 9, height = 5)
+ggsave(file="uni.pdf", g, width = 9, height = 5)
 
 # Descritiva Bivariada ----
 # Idade - Status
@@ -213,7 +215,7 @@ bi_ex_4 <- ggplot(trans_drv_4) +
             vjust = -0.5, hjust = 0.5,size = 2.5) +
   labs(x = "Posse de casa própria", y = "Frequência") +
   ylim(c(0,27)) +
-  scale_fill_manual(name="Status \n Socioceconômico", values=c("#197278","#E1C7B7","#C44536"))+
+  scale_fill_manual(name="Status Socio- \neconômico", values=c("#197278","#E1C7B7","#C44536"))+
   theme_bw() +
   theme(axis.title.y=element_text(colour="black", size=12),
         axis.title.x = element_text(colour="black", size=12),
@@ -237,7 +239,7 @@ bi_ex_5 <- ggplot(trans_drv_5) +
   geom_text(position = position_dodge(width = .9),
             vjust = -0.5, hjust = 0.5,size = 2.5) +
   labs(x = "Setor da cidade", y = "Frequência") +
-  scale_fill_manual(name="Status \n Socioceconômico", values=c("#197278","#E1C7B7","#C44536"))+
+  scale_fill_manual(name="Status Socio- \neconômico", values=c("#197278","#E1C7B7","#C44536"))+
   theme_bw() +
   ylim(c(0,30)) +
   theme(axis.title.y=element_text(colour="black", size=12),
@@ -287,7 +289,7 @@ bi_ex_6 <- ggplot(trans_drv_6) +
   geom_text(position = position_dodge(width = .9),
             vjust = -0.5, hjust = 0.5,size = 2.5) +
   labs(x = "Setor da cidade", y = "Frequência") +
-  scale_fill_manual(name="Posse de \n casa própria", values=c("#197278","#C44536"))+
+  scale_fill_manual(name="Posse de \ncasa própria", values=c("#197278","#C44536"))+
   theme_bw() +
   ylim(c(0,46)) +
   theme(axis.title.y=element_text(colour="black", size=12),
@@ -348,8 +350,14 @@ bi_resp_4 <- ggplot(trans_drv_res_4) +
         legend.position = "top") 
 
 grid.arrange(bi_ex_1,bi_ex_2,bi_ex_3,bi_ex_6,bi_ex_5,bi_ex_4, ncol=3, nrow=2)
-grid.arrange(bi_resp_1,bi_resp_2,bi_resp_3,bi_resp_4, ncol=2, nrow=2)
+g <- arrangeGrob(bi_ex_1,bi_ex_2,bi_ex_3,bi_ex_6,bi_ex_5,bi_ex_4, ncol=3, nrow=2) #generates g
+ggview(g, width = 13, height = 8)
+ggsave(file="bi_ex.pdf", g, width = 13, height = 8)
 
+grid.arrange(bi_resp_1,bi_resp_2,bi_resp_3,bi_resp_4, ncol=2, nrow=2)
+g <- arrangeGrob(bi_resp_1,bi_resp_2,bi_resp_3,bi_resp_4, ncol=2, nrow=2) #generates g
+ggview(g, width = 9, height = 5)
+ggsave(file="bi_resp.pdf", g, width = 9, height = 5)
 
 # Modelo
 amostra <- amostra %>% mutate(y = ifelse(poupanca == "Não",0,1))
