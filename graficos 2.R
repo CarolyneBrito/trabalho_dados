@@ -35,7 +35,7 @@ dados <- dados %>% mutate(status = case_when(status == 1 ~ "Superior",
                           poupanca = case_when(poupanca == 0 ~ "Não",
                                                poupanca == 1 ~ "Sim"))
 
-set.seed(123456789)
+set.seed(2023.1)
 amostra <- dados[sample(1:nrow(dados),100,F),]
 valid <- anti_join(dados, amostra)
 
@@ -66,7 +66,7 @@ uni_2 <- ggplot(classes,  aes(x = as.factor(status), y = n, label = n))  +
   geom_text(position = position_dodge(width = .9),
             vjust = -0.5, # hjust = .5,
             size = 3) +
-  ylim(c(0,45)) +
+  ylim(c(0,41)) +
   labs(x = "Status socioeconômico", y = "Frequência") +
   theme_bw() +
   theme(axis.title.y=element_text(colour="black", size=12),
@@ -88,7 +88,7 @@ uni_3 <- ggplot(classes,  aes(x = as.factor(casa), y = n, label = n))  +
   geom_text(position = position_dodge(width = .9),
             vjust = -0.5, # hjust = .5,
             size = 3) +
-  ylim(c(0, 60)) +
+  ylim(c(0, 65)) +
   labs(x = "Posse de casa própria", y = "Frequência") +
   theme_bw() +
   theme(axis.title.y=element_text(colour="black", size=12),
@@ -110,7 +110,7 @@ uni_4 <- ggplot(classes,  aes(x = as.factor(setor), y = n, label = n))  +
   geom_text(position = position_dodge(width = .9),
             vjust = -0.5, # hjust = .5,
             size = 3) +
-  ylim(c(0, 71)) +
+  ylim(c(0, 80)) +
   labs(x = "Setor da cidade", y = "Frequência") +
   theme_bw() +
   theme(axis.title.y=element_text(colour="black", size=12),
@@ -266,7 +266,7 @@ bi_resp_2 <- ggplot(trans_drv_res_2) +
   labs(x = "Status Socioceconômico", y = "Frequência") +
   scale_fill_manual(name="Conta Poupança", values=c("#197278","#C44536"))+
   theme_bw() +
-  ylim(c(0,34)) +
+  ylim(c(0,30)) +
   theme(axis.title.y=element_text(colour="black", size=12),
         axis.title.x = element_text(colour="black", size=12),
         axis.text = element_text(colour = "black", size=9.5),
@@ -291,7 +291,7 @@ bi_ex_6 <- ggplot(trans_drv_6) +
   labs(x = "Setor da cidade", y = "Frequência") +
   scale_fill_manual(name="Posse de \ncasa própria", values=c("#197278","#C44536"))+
   theme_bw() +
-  ylim(c(0,46)) +
+  ylim(c(0,56)) +
   theme(axis.title.y=element_text(colour="black", size=12),
         axis.title.x = element_text(colour="black", size=12),
         axis.text = element_text(colour = "black", size=9.5),
@@ -341,7 +341,7 @@ bi_resp_4 <- ggplot(trans_drv_res_4) +
   labs(x = "Setor da cidade", y = "Frequência") +
   scale_fill_manual(name="Conta Poupança", values=c("#197278","#C44536"))+
   theme_bw() +
-  ylim(c(0,38)) +
+  ylim(c(0,42)) +
   theme(axis.title.y=element_text(colour="black", size=12),
         axis.title.x = element_text(colour="black", size=12),
         axis.text = element_text(colour = "black", size=9.5),
@@ -366,8 +366,9 @@ ggplot(amostra, aes(x=idade , y=y)) +
   geom_point() +
   theme_bw() +
   labs(x = "Idade", y = "Conta Poupança") +
-  stat_smooth(method="glm", method.args=list(family="binomial"), se=FALSE)
-
+  stat_smooth(method="glm", method.args=list(family="binomial"), se=FALSE, col="#197278")
+ggview(width = 9, height = 5)
+ggsave(file="idade_dots.pdf", width = 9, height = 5)
 
 
 
